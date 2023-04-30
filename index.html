@@ -10,6 +10,9 @@
       <label>
         Imposta tempo del countdown (secondi): <input type="number" min="1" max="600" id="secondiEnable">
       </label>
+      <label>
+        Seleziona l'orario d'inizio: <input type="datetime-local" id="startTimeEnable">
+      </label>
       <button type="button" onclick="enable()">Avvia</button>
     </div>
   </div>
@@ -60,8 +63,8 @@
     margin: 0 auto;
     padding: 50px;
     display: block;
-    max-width: 1000px;
-    width: 100%;
+    min-width: 1000px;
+    /*width: 100%;*/
     text-align: center;
     background-color: #fff;
     border-radius: 12px;
@@ -78,3 +81,5 @@
 </style>
 <script src="app.js"></script>
 </html>
+
+<!-- TODO: add counter for starts-->

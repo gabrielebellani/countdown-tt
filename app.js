@@ -4,6 +4,7 @@ audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 countdown = document.getElementById("countdown-wrap")
 enableCountdown = document.getElementById("controlliContainer")
 enableSecondi = document.getElementById("secondiEnable")
+enableStartTime = document.getElementById("startTimeEnable")
 enableAudio = document.getElementById("audioCheck")
 enableColore = document.getElementById("coloreCheck")
 enableOrologio = document.getElementById("timeCheck")
@@ -18,37 +19,43 @@ function enable(){
         separator.style.display="block"
         time.style.display="block"
     }
-    startTimer(enableSecondi.value); //seconds
+
+    if(enableStartTime.value!==""){
+        let targetTime = new Date(enableStartTime.value).getTime();
+        const currentTime = new Date().getTime();
+
+        const timeDiff = targetTime - currentTime;
+
+        if (timeDiff > 0) {
+            setTimeout(() => {
+                startTimer(enableSecondi.value);
+            }, timeDiff);
+        } else {
+            alert("Errore, l'istante richiesto è già passato.")
+        }
+    }
 }
 function startTimer(secs) {
     timeInSecs = parseInt(secs);
     ticker = setInterval("tick()", 1000);
-
-    function time() {
-        var d = new Date();
-        var s = d.getSeconds();
-        var m = d.getMinutes();
-        var h = d.getHours();
-        timeSpan.textContent =
-            ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2) + ":" + ("0" + s).substr(-2);
-    }
-
-    setInterval(time, 1000)
 }
 
 function tick( ) {
-    if(!enableOrologio.checked){
-        separator.style.display="none"
-        time.style.display="none"
+    let times=0
+    let secs
+    if(times===0){
+        secs = timeInSecs-1
+        times++
+    }else{
+        secs=timeInSecs
     }
 
-    let secs = timeInSecs;
     if (secs > 0) {
         if(enableAudio.checked){
-            if(timeInSecs===10){
+            if(secs===10){
                 shortBeep()
             }
-            if(timeInSecs >= 1 && timeInSecs <= 5){
+            if(secs >= 1 && secs <= 5){
                 shortBeep()
             }
         }
@@ -66,20 +73,15 @@ function tick( ) {
         startTimer(enableSecondi.value); //seconds
     }
 
-    var days= Math.floor(secs/86400);
-    secs %= 86400;
     var hours= Math.floor(secs/3600);
     secs %= 3600;
     var mins = Math.floor(secs/60);
     secs %= 60;
-    var pretty = ( (days < 10 ) ? "0" : "" ) + days + ":" + ( (hours < 10 ) ? "0" : "" ) + hours + ":" + ( (mins < 10) ? "0" : "" ) + mins + ":" + ( (secs < 10) ? "0" : "" ) + secs;
 
-    document.getElementById("countdown").innerHTML = pretty;
+    let now = new Date()
+    timeSpan.textContent = `${((now.getHours() < 10) ? "0" : "")+now.getHours()}:${((now.getMinutes() < 10) ? "0" : "")+now.getMinutes()}:${((now.getSeconds() < 10) ? "0" : "")+now.getSeconds()}`;
 
-    if(enableOrologio.checked){
-        separator.style.display="block"
-        time.style.display="block"
-    }
+    document.getElementById("countdown").innerHTML = (((hours < 10) ? "0" : "") + hours + ":" + ((mins < 10) ? "0" : "") + mins + ":" + ((secs < 10) ? "0" : "") + secs)
 }
 function newLoop(){
     document.body.style.backgroundColor ="#04AA6D";
