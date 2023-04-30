@@ -6,22 +6,44 @@ enableCountdown = document.getElementById("controlliContainer")
 enableSecondi = document.getElementById("secondiEnable")
 enableAudio = document.getElementById("audioCheck")
 enableColore = document.getElementById("coloreCheck")
-
+enableOrologio = document.getElementById("timeCheck")
+time = document.getElementById('time-wrap');
+timeSpan = document.getElementById('time');
+separator = document.getElementById('separator');
 
 function enable(){
     enableCountdown.style.display="none"
     countdown.style.display="block"
+    if(enableOrologio.checked){
+        separator.style.display="block"
+        time.style.display="block"
+    }
     startTimer(enableSecondi.value); //seconds
 }
 function startTimer(secs) {
     timeInSecs = parseInt(secs);
     ticker = setInterval("tick()", 1000);
+
+    function time() {
+        var d = new Date();
+        var s = d.getSeconds();
+        var m = d.getMinutes();
+        var h = d.getHours();
+        timeSpan.textContent =
+            ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2) + ":" + ("0" + s).substr(-2);
+    }
+
+    setInterval(time, 1000)
 }
 
 function tick( ) {
+    if(!enableOrologio.checked){
+        separator.style.display="none"
+        time.style.display="none"
+    }
+
     let secs = timeInSecs;
     if (secs > 0) {
-        console.log(timeInSecs)
         if(enableAudio.checked){
             if(timeInSecs===10){
                 shortBeep()
@@ -53,6 +75,11 @@ function tick( ) {
     var pretty = ( (days < 10 ) ? "0" : "" ) + days + ":" + ( (hours < 10 ) ? "0" : "" ) + hours + ":" + ( (mins < 10) ? "0" : "" ) + mins + ":" + ( (secs < 10) ? "0" : "" ) + secs;
 
     document.getElementById("countdown").innerHTML = pretty;
+
+    if(enableOrologio.checked){
+        separator.style.display="block"
+        time.style.display="block"
+    }
 }
 function newLoop(){
     document.body.style.backgroundColor ="#04AA6D";
